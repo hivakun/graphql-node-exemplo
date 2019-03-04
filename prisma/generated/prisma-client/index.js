@@ -7,6 +7,14 @@ var models = [
   {
     name: "Usuario",
     embedded: false
+  },
+  {
+    name: "Produto",
+    embedded: false
+  },
+  {
+    name: "Pedido",
+    embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({

@@ -37,7 +37,43 @@ async function login(parent, args, context, info) {
     }
 }
 
+function addBebida(parent, args, context, info) {
+
+    const usuario = getUsuarioID(context);
+
+    return context.prisma.createProduto({
+        nome: args.nome,
+        categoria: 'Bebida'
+    });
+}
+
+function addPrato(parent, args, context, info) {
+
+    const usuario = getUsuarioID(context);
+
+    return context.prisma.createProduto({
+        nome: args.nome,
+        descricao: args.descricao,
+        imagemUrl: args.imagemUrl,
+        categoria: 'Prato'
+    });
+}
+
+async function pedir(parent, args, context, info) {
+
+    const idUsuario = getUsuarioID(context);
+
+    return context.prisma.createPedido({
+        usuario: { connect: { id: idUsuario } },
+        prato: { connect: { id: args.idPrato } },
+        bebida: { connect: { id: args.idBebida } },
+    });
+}
+
 module.exports = {
     cadastro,
     login,
+    addPrato,
+    addBebida,
+    pedir
 };

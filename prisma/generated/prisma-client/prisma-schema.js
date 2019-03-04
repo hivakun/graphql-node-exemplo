@@ -3,7 +3,15 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateUsuario {
+/* GraphQL */ `type AggregatePedido {
+  count: Int!
+}
+
+type AggregateProduto {
+  count: Int!
+}
+
+type AggregateUsuario {
   count: Int!
 }
 
@@ -11,9 +19,22 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 scalar Long
 
 type Mutation {
+  createPedido(data: PedidoCreateInput!): Pedido!
+  updatePedido(data: PedidoUpdateInput!, where: PedidoWhereUniqueInput!): Pedido
+  upsertPedido(where: PedidoWhereUniqueInput!, create: PedidoCreateInput!, update: PedidoUpdateInput!): Pedido!
+  deletePedido(where: PedidoWhereUniqueInput!): Pedido
+  deleteManyPedidoes(where: PedidoWhereInput): BatchPayload!
+  createProduto(data: ProdutoCreateInput!): Produto!
+  updateProduto(data: ProdutoUpdateInput!, where: ProdutoWhereUniqueInput!): Produto
+  updateManyProdutoes(data: ProdutoUpdateManyMutationInput!, where: ProdutoWhereInput): BatchPayload!
+  upsertProduto(where: ProdutoWhereUniqueInput!, create: ProdutoCreateInput!, update: ProdutoUpdateInput!): Produto!
+  deleteProduto(where: ProdutoWhereUniqueInput!): Produto
+  deleteManyProdutoes(where: ProdutoWhereInput): BatchPayload!
   createUsuario(data: UsuarioCreateInput!): Usuario!
   updateUsuario(data: UsuarioUpdateInput!, where: UsuarioWhereUniqueInput!): Usuario
   updateManyUsuarios(data: UsuarioUpdateManyMutationInput!, where: UsuarioWhereInput): BatchPayload!
@@ -39,7 +60,298 @@ type PageInfo {
   endCursor: String
 }
 
+type Pedido {
+  id: ID!
+  usuario: Usuario!
+  prato: Produto!
+  bebida: Produto!
+  createdAt: DateTime!
+}
+
+type PedidoConnection {
+  pageInfo: PageInfo!
+  edges: [PedidoEdge]!
+  aggregate: AggregatePedido!
+}
+
+input PedidoCreateInput {
+  usuario: UsuarioCreateOneInput!
+  prato: ProdutoCreateOneInput!
+  bebida: ProdutoCreateOneInput!
+}
+
+type PedidoEdge {
+  node: Pedido!
+  cursor: String!
+}
+
+enum PedidoOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type PedidoPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+}
+
+type PedidoSubscriptionPayload {
+  mutation: MutationType!
+  node: Pedido
+  updatedFields: [String!]
+  previousValues: PedidoPreviousValues
+}
+
+input PedidoSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: PedidoWhereInput
+  AND: [PedidoSubscriptionWhereInput!]
+  OR: [PedidoSubscriptionWhereInput!]
+  NOT: [PedidoSubscriptionWhereInput!]
+}
+
+input PedidoUpdateInput {
+  usuario: UsuarioUpdateOneRequiredInput
+  prato: ProdutoUpdateOneRequiredInput
+  bebida: ProdutoUpdateOneRequiredInput
+}
+
+input PedidoWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  usuario: UsuarioWhereInput
+  prato: ProdutoWhereInput
+  bebida: ProdutoWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [PedidoWhereInput!]
+  OR: [PedidoWhereInput!]
+  NOT: [PedidoWhereInput!]
+}
+
+input PedidoWhereUniqueInput {
+  id: ID
+}
+
+type Produto {
+  id: ID!
+  nome: String!
+  categoria: String!
+  descricao: String
+  imagemUrl: String
+}
+
+type ProdutoConnection {
+  pageInfo: PageInfo!
+  edges: [ProdutoEdge]!
+  aggregate: AggregateProduto!
+}
+
+input ProdutoCreateInput {
+  nome: String!
+  categoria: String!
+  descricao: String
+  imagemUrl: String
+}
+
+input ProdutoCreateOneInput {
+  create: ProdutoCreateInput
+  connect: ProdutoWhereUniqueInput
+}
+
+type ProdutoEdge {
+  node: Produto!
+  cursor: String!
+}
+
+enum ProdutoOrderByInput {
+  id_ASC
+  id_DESC
+  nome_ASC
+  nome_DESC
+  categoria_ASC
+  categoria_DESC
+  descricao_ASC
+  descricao_DESC
+  imagemUrl_ASC
+  imagemUrl_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ProdutoPreviousValues {
+  id: ID!
+  nome: String!
+  categoria: String!
+  descricao: String
+  imagemUrl: String
+}
+
+type ProdutoSubscriptionPayload {
+  mutation: MutationType!
+  node: Produto
+  updatedFields: [String!]
+  previousValues: ProdutoPreviousValues
+}
+
+input ProdutoSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ProdutoWhereInput
+  AND: [ProdutoSubscriptionWhereInput!]
+  OR: [ProdutoSubscriptionWhereInput!]
+  NOT: [ProdutoSubscriptionWhereInput!]
+}
+
+input ProdutoUpdateDataInput {
+  nome: String
+  categoria: String
+  descricao: String
+  imagemUrl: String
+}
+
+input ProdutoUpdateInput {
+  nome: String
+  categoria: String
+  descricao: String
+  imagemUrl: String
+}
+
+input ProdutoUpdateManyMutationInput {
+  nome: String
+  categoria: String
+  descricao: String
+  imagemUrl: String
+}
+
+input ProdutoUpdateOneRequiredInput {
+  create: ProdutoCreateInput
+  update: ProdutoUpdateDataInput
+  upsert: ProdutoUpsertNestedInput
+  connect: ProdutoWhereUniqueInput
+}
+
+input ProdutoUpsertNestedInput {
+  update: ProdutoUpdateDataInput!
+  create: ProdutoCreateInput!
+}
+
+input ProdutoWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  nome: String
+  nome_not: String
+  nome_in: [String!]
+  nome_not_in: [String!]
+  nome_lt: String
+  nome_lte: String
+  nome_gt: String
+  nome_gte: String
+  nome_contains: String
+  nome_not_contains: String
+  nome_starts_with: String
+  nome_not_starts_with: String
+  nome_ends_with: String
+  nome_not_ends_with: String
+  categoria: String
+  categoria_not: String
+  categoria_in: [String!]
+  categoria_not_in: [String!]
+  categoria_lt: String
+  categoria_lte: String
+  categoria_gt: String
+  categoria_gte: String
+  categoria_contains: String
+  categoria_not_contains: String
+  categoria_starts_with: String
+  categoria_not_starts_with: String
+  categoria_ends_with: String
+  categoria_not_ends_with: String
+  descricao: String
+  descricao_not: String
+  descricao_in: [String!]
+  descricao_not_in: [String!]
+  descricao_lt: String
+  descricao_lte: String
+  descricao_gt: String
+  descricao_gte: String
+  descricao_contains: String
+  descricao_not_contains: String
+  descricao_starts_with: String
+  descricao_not_starts_with: String
+  descricao_ends_with: String
+  descricao_not_ends_with: String
+  imagemUrl: String
+  imagemUrl_not: String
+  imagemUrl_in: [String!]
+  imagemUrl_not_in: [String!]
+  imagemUrl_lt: String
+  imagemUrl_lte: String
+  imagemUrl_gt: String
+  imagemUrl_gte: String
+  imagemUrl_contains: String
+  imagemUrl_not_contains: String
+  imagemUrl_starts_with: String
+  imagemUrl_not_starts_with: String
+  imagemUrl_ends_with: String
+  imagemUrl_not_ends_with: String
+  AND: [ProdutoWhereInput!]
+  OR: [ProdutoWhereInput!]
+  NOT: [ProdutoWhereInput!]
+}
+
+input ProdutoWhereUniqueInput {
+  id: ID
+}
+
 type Query {
+  pedido(where: PedidoWhereUniqueInput!): Pedido
+  pedidoes(where: PedidoWhereInput, orderBy: PedidoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Pedido]!
+  pedidoesConnection(where: PedidoWhereInput, orderBy: PedidoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PedidoConnection!
+  produto(where: ProdutoWhereUniqueInput!): Produto
+  produtoes(where: ProdutoWhereInput, orderBy: ProdutoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Produto]!
+  produtoesConnection(where: ProdutoWhereInput, orderBy: ProdutoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdutoConnection!
   usuario(where: UsuarioWhereUniqueInput!): Usuario
   usuarios(where: UsuarioWhereInput, orderBy: UsuarioOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Usuario]!
   usuariosConnection(where: UsuarioWhereInput, orderBy: UsuarioOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UsuarioConnection!
@@ -47,6 +359,8 @@ type Query {
 }
 
 type Subscription {
+  pedido(where: PedidoSubscriptionWhereInput): PedidoSubscriptionPayload
+  produto(where: ProdutoSubscriptionWhereInput): ProdutoSubscriptionPayload
   usuario(where: UsuarioSubscriptionWhereInput): UsuarioSubscriptionPayload
 }
 
@@ -69,6 +383,11 @@ input UsuarioCreateInput {
   sobrenome: String!
   email: String!
   senha: String!
+}
+
+input UsuarioCreateOneInput {
+  create: UsuarioCreateInput
+  connect: UsuarioWhereUniqueInput
 }
 
 type UsuarioEdge {
@@ -119,6 +438,13 @@ input UsuarioSubscriptionWhereInput {
   NOT: [UsuarioSubscriptionWhereInput!]
 }
 
+input UsuarioUpdateDataInput {
+  nome: String
+  sobrenome: String
+  email: String
+  senha: String
+}
+
 input UsuarioUpdateInput {
   nome: String
   sobrenome: String
@@ -131,6 +457,18 @@ input UsuarioUpdateManyMutationInput {
   sobrenome: String
   email: String
   senha: String
+}
+
+input UsuarioUpdateOneRequiredInput {
+  create: UsuarioCreateInput
+  update: UsuarioUpdateDataInput
+  upsert: UsuarioUpsertNestedInput
+  connect: UsuarioWhereUniqueInput
+}
+
+input UsuarioUpsertNestedInput {
+  update: UsuarioUpdateDataInput!
+  create: UsuarioCreateInput!
 }
 
 input UsuarioWhereInput {
