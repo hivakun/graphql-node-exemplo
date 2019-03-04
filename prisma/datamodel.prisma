@@ -1,0 +1,23 @@
+type Usuario {
+  id: ID! @unique
+  nome: String!
+  sobrenome: String!
+  email: String! @unique
+  senha: String!
+}
+
+type Produto {
+    id: ID! @unique
+    nome: String!
+    categoria: String!
+    descricao: String
+    imagemUrl: String
+}
+
+type Pedido {
+    id: ID! @unique
+    usuario: Usuario!
+    prato: Produto! @relation(name: "PratoOnPedido")
+    bebida: Produto! @relation(name: "BebidaOnPedido")
+    createdAt: DateTime!
+}
